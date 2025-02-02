@@ -18,9 +18,9 @@ For the `sim` branch:
 - [Digilent WaveForms](https://digilent.com/shop/out-of-the-box-solutions/) (f**k Digilent)
 - [pydwf](https://pypi.org/project/pydyf/) (f**k Digilent)
 - [pyserial](https://pypi.org/project/pyserial/)
-- Raspberry Pi:
-1. [mfrc522](https://pypi.org/project/mfrc522/)
-2. [bmp280](https://pypi.org/project/bmp280/)
+- On your Raspberry Pi:
+    * [mfrc522](https://pypi.org/project/mfrc522/)
+    * [bmp280](https://pypi.org/project/bmp280/)
 
 # `sim` and `live` branches
 In case you don't have access to the hardware, but you want to simulate it working using two terminals (I know, it's less fun), use the `sim` branch. The live branch contains the same logic, but imports the necessary libraries.
