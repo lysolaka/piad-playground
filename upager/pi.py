@@ -1,17 +1,11 @@
 import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from pts_helper import get_pts
-
 import serial
 import time
 import threading
 
 SIG_END = b"\x03"
 
-ser = serial.Serial(get_pts("pi"), 9600, timeout=0)
+ser = serial.Serial("/dev/ttyS0", 9600, timeout=0)
 
 
 def update_rx():

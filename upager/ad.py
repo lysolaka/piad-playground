@@ -1,20 +1,17 @@
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from pts_helper import get_pts
-
 import tkinter as tk
 import threading
 import queue
-import serial
+from pydwf import DwfLibrary, PyDwfError
+from pydwf.utilities import openDwfDevice
+from pydwf.core.api.protocol_uart import ProtocolUART
 
 SIG_END = b"\x03"
+UART_TX = 8
+UART_RX = 0
 
 
 class Window:
-    def __init__(self, root: tk.Tk):
+    def __init__(self, root: tk.Tk, uart: ProtocolUART):
         self.root = root
         self.root.title("UART Pager")
 
@@ -35,7 +32,16 @@ class Window:
         self.send_bt = tk.Button(root, text="Send", command=self.msg_tx)
         self.send_bt.grid(row=2, column=0, columnspan=2, pady=10)
 
-        self.ser = serial.Serial(get_pts("ad"), 9600, timeout=0)
+        uart.reset()
+        uart.rateSet(9600.0)
+        uart.bitsSet(8)
+        uart.paritySet(0)
+        uart.stopSet(1)
+        uart.txSet(UART_TX)
+        uart.rxSet(UART_RX)
+        uart.rx(0)
+
+        self.uart = uart
         thread = threading.Thread(target=self.rx_thread, daemon=True)
         thread.start()
 
@@ -50,7 +56,7 @@ class Window:
     def rx_thread(self):
         rx_buf = bytearray()
         while True:
-            rx = self.ser.read(1)
+            rx, _ = self.uart.rx(1)
             if rx:
                 rx_buf += rx
                 if rx_buf[-1:] == bytearray(SIG_END):
@@ -70,11 +76,19 @@ class Window:
 
     def msg_tx(self):
         tx = self.tx_txt.get()
-        self.ser.write(tx.encode())
-        self.ser.write(SIG_END)
+        self.uart.tx(tx.encode())
+        self.uart.tx(SIG_END)
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = Window(root)
-    root.mainloop()
+    try:
+        dwf = DwfLibrary()
+        with openDwfDevice(dwf) as device:
+            root = tk.Tk()
+            app = Window(root, device.protocol.uart)
+            root.mainloop()
+    except PyDwfError as exception:
+        print("PyDwfError:", exception)
+    except KeyboardInterrupt:
+        print("Keyboard interrupt, ending.")
+
