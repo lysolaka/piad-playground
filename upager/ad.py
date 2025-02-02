@@ -36,6 +36,7 @@ class Window:
         self.send_bt.grid(row=2, column=0, columnspan=2, pady=10)
 
         self.ser = serial.Serial(get_pts("ad"), 9600, timeout=0)
+        self.ser.flush()
         thread = threading.Thread(target=self.rx_thread, daemon=True)
         thread.start()
 

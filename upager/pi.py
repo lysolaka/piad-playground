@@ -12,6 +12,7 @@ import threading
 SIG_END = b"\x03"
 
 ser = serial.Serial(get_pts("pi"), 9600, timeout=0)
+ser.flush()
 
 
 def update_rx():
