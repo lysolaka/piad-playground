@@ -1,18 +1,7 @@
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from pts_helper import get_pts
-
 import time
 import serial
-import numpy as np
-
-
-def randn() -> float:
-    x = np.random.rand()
-    return x * float(np.random.randint(low=9, high=31))
+from bmp280 import BMP280
+from smbus2 import SMBus
 
 
 def make_csv(temp: list[float], pres: list[float]):
@@ -23,8 +12,11 @@ def make_csv(temp: list[float], pres: list[float]):
         file.writelines(flines)
 
 
-ser = serial.Serial(get_pts("pi"), 9600, timeout=0)
+ser = serial.Serial("/dev/ttyS0", 9600, timeout=0)
 ser.flush()
+bus = SMBus(1)
+sensor = BMP280(i2c_dev=bus)
+
 SIG_END = b"\x04"
 SIG_ENQ = b"\x05"
 SIG_ACK = b"\x06"
@@ -39,8 +31,8 @@ try:
             temp: list[float] = []
             pres: list[float] = []
             for i in range(11):
-                temp.append(randn())
-                pres.append(randn())
+                temp.append(sensor.get_temperature())
+                pres.append(sensor.get_pressure())
                 time.sleep(1)
             make_csv(temp, pres)
             with open("tx_latest.csv", "rb") as file:
