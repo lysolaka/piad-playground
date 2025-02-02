@@ -3,10 +3,10 @@ A collection of Python scripts I made for playing around with a Raspberry Pi and
 
 ## Setup
 For the `live` branch:
-![connection setup](connection-setup.png)
+![connection setup](setup/connection-setup.png)
 
 For the `sim` branch:
-![sim setup](sim-setup.png)
+![sim setup](setup/sim-setup.png)
 
 ## Requirements
 1. `sim` branch (Linux only):
