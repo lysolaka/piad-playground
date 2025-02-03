@@ -35,8 +35,12 @@ def update_rx():
 thread = threading.Thread(target=update_rx, daemon=True)
 thread.start()
 
-while True:
-    print()
-    tx = input("Send text: ")
-    ser.write(tx.encode())
-    ser.write(SIG_END)
+print("Working in continuous mode. Press Control-C to exit.")
+try:
+    while True:
+        print()
+        tx = input("Send text: ")
+        ser.write(tx.encode())
+        ser.write(SIG_END)
+except KeyboardInterrupt:
+    print("Leaving...")
