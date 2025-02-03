@@ -17,8 +17,8 @@ For the `sim` branch:
 2. `live` branch (Windows only :P):
 - [Digilent WaveForms](https://digilent.com/shop/out-of-the-box-solutions/) (f**k Digilent)
 - [pydwf](https://pypi.org/project/pydyf/) (f**k Digilent)
-- [pyserial](https://pypi.org/project/pyserial/)
 - On your Raspberry Pi:
+    * [pyserial](https://pypi.org/project/pyserial/)
     * [mfrc522](https://pypi.org/project/mfrc522/)
     * [bmp280](https://pypi.org/project/bmp280/)
 
